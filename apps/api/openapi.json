@@ -76,6 +76,38 @@
       }
     },
     "/api/products": {
+      "get": {
+        "operationId": "ProductsController_findAll",
+        "parameters": [
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar por slug de categoría",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      },
       "post": {
         "operationId": "ProductsController_create",
         "parameters": [],
@@ -99,28 +131,6 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "products"
-        ]
-      },
-      "get": {
-        "operationId": "ProductsController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
-              }
-            }
-          }
-        },
         "tags": [
           "products"
         ]
@@ -151,11 +161,6 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "products"
         ]
@@ -1963,6 +1968,60 @@
           "order-statuses"
         ]
       }
+    },
+    "/api/categories": {
+      "get": {
+        "operationId": "CategoriesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
+    },
+    "/api/categories/{slug}": {
+      "get": {
+        "operationId": "CategoriesController_findOne",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      }
     }
   },
   "info": {
@@ -2025,9 +2084,49 @@
           }
         }
       },
-      "CreateProductDto": {
+      "ProductCategory": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Remeras"
+          },
+          "slug": {
+            "type": "string",
+            "example": "remeras"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ]
+      },
+      "ProductStock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "size": {
+            "type": "string",
+            "example": "M"
+          },
+          "quantity": {
+            "type": "number",
+            "example": 10
+          }
+        },
+        "required": [
+          "id",
+          "size",
+          "quantity"
+        ]
       },
       "Product": {
         "type": "object",
@@ -2038,11 +2137,11 @@
           },
           "name": {
             "type": "string",
-            "example": "Product Name"
+            "example": "Remera Técnica Elite"
           },
           "price": {
             "type": "number",
-            "example": 99.99
+            "example": 25.99
           },
           "image": {
             "type": "string",
@@ -2051,13 +2150,31 @@
           },
           "description": {
             "type": "string",
-            "example": "Product description...",
+            "example": "Descripción del producto",
             "nullable": true
+          },
+          "category_id": {
+            "type": "number",
+            "example": 1
           },
           "created_at": {
             "type": "string",
-            "example": "2026-04-10T05:27:56.077Z",
+            "example": "2026-04-10T00:00:00.000Z",
             "nullable": true
+          },
+          "categories": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductCategory"
+              }
+            ]
+          },
+          "product_stocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductStock"
+            }
           }
         },
         "required": [
@@ -2066,8 +2183,15 @@
           "price",
           "image",
           "description",
-          "created_at"
+          "category_id",
+          "created_at",
+          "categories",
+          "product_stocks"
         ]
+      },
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {}
       },
       "UpdateProductDto": {
         "type": "object",
@@ -2176,6 +2300,40 @@
       "UpdateOrderStatusDto": {
         "type": "object",
         "properties": {}
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Remeras"
+          },
+          "slug": {
+            "type": "string",
+            "example": "remeras"
+          },
+          "description": {
+            "type": "string",
+            "example": "Remeras y camisetas",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2026-04-10T00:00:00.000Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "created_at"
+        ]
       }
     }
   }

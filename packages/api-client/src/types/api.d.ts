@@ -516,6 +516,38 @@ export interface paths {
         patch: operations["OrderStatusesController_update"];
         trace?: never;
     };
+    "/api/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CategoriesController_findAll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CategoriesController_findOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -536,21 +568,41 @@ export interface components {
             name?: string;
             phone?: string;
         };
-        CreateProductDto: Record<string, never>;
+        ProductCategory: {
+            /** @example 1 */
+            id: number;
+            /** @example Remeras */
+            name: string;
+            /** @example remeras */
+            slug: string;
+        };
+        ProductStock: {
+            /** @example 1 */
+            id: number;
+            /** @example M */
+            size: string;
+            /** @example 10 */
+            quantity: number;
+        };
         Product: {
             /** @example 1 */
             id: number;
-            /** @example Product Name */
+            /** @example Remera Técnica Elite */
             name: string;
-            /** @example 99.99 */
+            /** @example 25.99 */
             price: number;
             /** @example https://example.com/image.png */
             image: string | null;
-            /** @example Product description... */
+            /** @example Descripción del producto */
             description: string | null;
-            /** @example 2026-04-10T05:27:56.077Z */
+            /** @example 1 */
+            category_id: number;
+            /** @example 2026-04-10T00:00:00.000Z */
             created_at: string | null;
+            categories: components["schemas"]["ProductCategory"] | null;
+            product_stocks: components["schemas"]["ProductStock"][];
         };
+        CreateProductDto: Record<string, never>;
         UpdateProductDto: Record<string, never>;
         CreateProductStockDto: Record<string, never>;
         UpdateProductStockDto: Record<string, never>;
@@ -578,6 +630,18 @@ export interface components {
         UpdatePaymentStatusDto: Record<string, never>;
         CreateOrderStatusDto: Record<string, never>;
         UpdateOrderStatusDto: Record<string, never>;
+        Category: {
+            /** @example 1 */
+            id: number;
+            /** @example Remeras */
+            name: string;
+            /** @example remeras */
+            slug: string;
+            /** @example Remeras y camisetas */
+            description: string | null;
+            /** @example 2026-04-10T00:00:00.000Z */
+            created_at: string | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -648,7 +712,10 @@ export interface operations {
     };
     ProductsController_findAll: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Filtrar por slug de categoría */
+                category?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2067,6 +2134,46 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    CategoriesController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Category"][];
+                };
+            };
+        };
+    };
+    CategoriesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Category"];
+                };
             };
         };
     };

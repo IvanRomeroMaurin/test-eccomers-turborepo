@@ -13,3 +13,4 @@ export * from './address';
 export * from './payment-method';
 export * from './payment-status';
 export * from './order-status';
+export * from './category';

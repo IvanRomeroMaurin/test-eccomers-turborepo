@@ -4,8 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  schemas   = ["auth", "public"]
+  provider = "postgresql"
+  schemas  = ["auth", "public"]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -503,7 +503,7 @@ model addresses {
   is_default      Boolean?          @default(false)
   cities          cities            @relation(fields: [city_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   postal_codes    postal_codes      @relation(fields: [postal_code_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users           users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   order_shippings order_shippings[]
 
   @@schema("public")
@@ -561,7 +561,7 @@ model orders {
   order_items     order_items[]
   order_shippings order_shippings?
   order_statuses  order_statuses   @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users           users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   payments        payments[]
 
   @@schema("public")
@@ -624,8 +624,10 @@ model products {
   image          String?
   description    String?
   created_at     DateTime?        @default(now()) @db.Timestamptz(6)
+  category_id    Int              @default(1)
   order_items    order_items[]
   product_stocks product_stocks[]
+  categories     categories       @relation(fields: [category_id], references: [id], onUpdate: NoAction)
   reviews        reviews[]
 
   @@schema("public")
@@ -641,14 +643,14 @@ model provinces {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model reviews {
-  id         Int          @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   product_id Int
-  user_id    String       @db.Uuid
-  rating     Int          @default(5)
+  user_id    String    @db.Uuid
+  rating     Int       @default(5)
   comment    String?
-  created_at DateTime?    @default(now()) @db.Timestamptz(6)
-  products   products     @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  users      users @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  products   products  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([product_id, user_id])
   @@schema("public")
@@ -666,6 +668,17 @@ model users {
   users      auth_users  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("users")
+  @@schema("public")
+}
+
+model categories {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  products    products[]
+
   @@schema("public")
 }
 

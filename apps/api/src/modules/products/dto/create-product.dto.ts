@@ -17,4 +17,8 @@ export class CreateProductDto implements Omit<Product, 'id' | 'created_at'> {
   @IsOptional()
   @IsString()
   description: string | null;
+
+  @IsNotEmpty()
+  @IsNumber()
+  category_id: number;
 }

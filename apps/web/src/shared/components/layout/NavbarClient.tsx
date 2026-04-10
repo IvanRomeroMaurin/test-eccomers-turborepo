@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { LogOut, User } from 'lucide-react'
+import { LogOut, User, Settings, Package } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -26,34 +26,63 @@ export function NavbarClient({ user }: NavbarClientProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="outline-none">
-          <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">
+        <button className="flex items-center gap-2 outline-none group">
+          <Avatar className="h-9 w-9 cursor-pointer border border-border/60 transition-colors group-hover:border-foreground/40 rounded-full">
+            <AvatarFallback className="bg-muted text-foreground text-[10px] font-medium tracking-tighter">
               {initial}
             </AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal truncate">
-          {user.email}
+      <DropdownMenuContent align="end" className="w-56 p-2 rounded-none border-border/60">
+        <DropdownMenuLabel className="px-2 py-3">
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-semibold leading-none text-foreground uppercase tracking-widest">
+              {user.name ?? 'Usuario'}
+            </p>
+            <p className="text-[10px] leading-none text-muted-foreground truncate">
+              {user.email}
+            </p>
+          </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/profile" className="flex items-center gap-2 cursor-pointer">
-            <User size={14} />
-            Mi Perfil
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <form action={logoutAction} className="w-full">
-            <button type="submit" className="flex items-center gap-2 w-full text-destructive">
+        <DropdownMenuSeparator className="bg-border/40" />
+        
+        <div className="py-1">
+          <DropdownMenuItem asChild className="rounded-none px-2 py-2 focus:bg-muted cursor-pointer transition-colors group">
+            <Link href="/profile" className="flex items-center gap-3 w-full">
+              <User size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <span className="text-[11px] tracking-widest uppercase">Mi Perfil</span>
+            </Link>
+          </DropdownMenuItem>
+          
+          <DropdownMenuItem asChild className="rounded-none px-2 py-2 focus:bg-muted cursor-pointer transition-colors group">
+            <Link href="/orders" className="flex items-center gap-3 w-full">
+              <Package size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <span className="text-[11px] tracking-widest uppercase">Mis Pedidos</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem asChild className="rounded-none px-2 py-2 focus:bg-muted cursor-pointer transition-colors group">
+            <Link href="/settings" className="flex items-center gap-3 w-full">
+              <Settings size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
+              <span className="text-[11px] tracking-widest uppercase">Ajustes</span>
+            </Link>
+          </DropdownMenuItem>
+        </div>
+
+        <DropdownMenuSeparator className="bg-border/40" />
+        
+        <form action={logoutAction} className="py-1">
+          <DropdownMenuItem 
+            asChild 
+            className="rounded-none px-2 py-2 focus:bg-destructive/10 cursor-pointer transition-colors group"
+          >
+            <button type="submit" className="flex items-center gap-3 w-full text-destructive">
               <LogOut size={14} />
-              Cerrar sesión
+              <span className="text-[11px] tracking-widest uppercase">Cerrar sesión</span>
             </button>
-          </form>
-        </DropdownMenuItem>
+          </DropdownMenuItem>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   )

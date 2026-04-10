@@ -23,6 +23,7 @@ import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.
 import { PaymentStatusesModule } from './modules/payment-statuses/payment-statuses.module';
 import { OrderStatusesModule } from './modules/order-statuses/order-statuses.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PaymentStatusesModule,
     OrderStatusesModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

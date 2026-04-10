@@ -1,9 +1,7 @@
-export interface Product {
+export interface Category {
   id: number
   name: string
-  price: number
-  image?: string | null
+  slug: string
   description?: string | null
-  category_id: number
   created_at?: string | Date | null
 }

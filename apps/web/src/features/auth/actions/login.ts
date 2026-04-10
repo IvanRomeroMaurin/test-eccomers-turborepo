@@ -16,5 +16,5 @@ export async function login(credentials: LoginCredentials) {
     return { error: error.message }
   }
 
-  redirect('/dashboard')
+  redirect('/')
 }
