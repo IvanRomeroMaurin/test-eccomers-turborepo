@@ -19,12 +19,15 @@ El proyecto destaca por el uso de patrones de diseño avanzados:
 | Herramienta | Rol |
 |---|---|
 | [Next.js 15+](https://nextjs.org/) | **Frontend** — React con App Router y Server Components |
-| [NestJS](https://nestjs.com/) | **Backend** — API REST modular y escalable |
+| [NestJS 11](https://nestjs.com/) | **Backend** — API REST modular y escalable |
 | [Supabase Auth](https://supabase.com/auth) | **Autenticación** — Gestión de sesiones, login y registro |
+| [Passport & JWT](http://www.passportjs.org/) | **Seguridad** — Validación de JWT de Supabase en el backend |
+| [Swagger / OpenAPI](https://swagger.io/) | **Documentación** — Especificación y UI interactiva de la API |
 | [Prisma ORM](https://www.prisma.io/) | **Base de Datos** — Gestión de esquemas (`auth` y `public`) y consultas |
-| [Turborepo](https://turbo.build/) | **Orquestador** — Gestión inteligente de tareas y cache en el monorepo |
+| [Turborepo](https://turbo.build/) | **Orquestador** — Gestión inteligente de tareas y cache |
 | [pnpm](https://pnpm.io/) | **Package Manager** — Gestión eficiente de dependencias con workspaces |
-| [PostgreSQL](https://www.postgresql.org/) | **Persistence** — Base de datos relacional robusta |
+| [openapi-typescript](https://openapi-ts.pages.dev/) | **Type Safety** — Generación de tipos TS a partir de OpenAPI |
+
 
 ---
 
@@ -36,7 +39,8 @@ my-monorepo/
 │   ├── web/          # Frontend Next.js (Architecture-driven / FSD)
 │   └── api/          # Backend NestJS (Modular Architecture)
 ├── packages/
-│   └── types/        # Tipos de TypeScript compartidos (@repo/types)
+│   ├── types/        # Tipos de TypeScript compartidos (@repo/types)
+│   └── api-client/   # Cliente HTTP autogenerado con tipos (@repo/api-client)
 ├── turbo.json        # Configuración de pipelines
 └── pnpm-workspace.yaml
 ```
@@ -46,8 +50,9 @@ my-monorepo/
 ## ⚙️ Primeros Pasos
 
 ### Prerrequisitos
-- [Node.js](https://nodejs.org/) v18+
-- [pnpm](https://pnpm.io/) v8+
+- [Node.js](https://nodejs.org/) v20+
+- [pnpm](https://pnpm.io/) v9+
+
 
 ### Instalación
 ```bash
@@ -66,15 +71,16 @@ pnpm dev
 | App | URL |
 |---|---|
 | **Frontend** | [http://localhost:3000](http://localhost:3000) |
-| **Backend** | [http://localhost:3001](http://localhost:3001) |
+| **Backend** | [http://localhost:3001/api](http://localhost:3001/api) |
+| **API Docs (Swagger)** | [http://localhost:3001/docs](http://localhost:3001/docs) |
 
 ---
 
 ## 🛠️ Scripts Clave
 
-- `pnpm dev`: Inicia el modo desarrollo.
-- `pnpm build`: Compila para producción.
-- `pnpm lint`: Ejecuta el análisis estático.
+- `pnpm dev`: Inicia el modo desarrollo (Web + API).
+- `pnpm build`: Compila todo el monorepo.
+- `pnpm generate:api`: Sincroniza los tipos del `api-client` con el backend.
 - `pnpm db:generate`: Regenera el cliente de Prisma.
 
 ---
@@ -83,5 +89,7 @@ pnpm dev
 
 Este proyecto se utiliza como laboratorio para implementar:
 - **Auth Flow**: Registro con confirmación de email y redirección segura.
-- **Database Synchronization**: Sincronización automática de perfiles entre `auth.users` y `public.users` mediante triggers de PostgreSQL.
-- **Server Actions**: Manejo eficiente de lógica de servidor directamente desde los componentes de Next.js.
+- **Database Synchronization**: Sincronización automática de perfiles mediante triggers de PostgreSQL.
+- **Type Safe Communication**: Uso de `openapi-typescript` para garantizar que el frontend y el backend hablen el mismo idioma sin escribir tipos manuales.
+- **Protected Routes**: Implementación de Guards JWT en NestJS para asegurar que solo usuarios autenticados operen sobre sus datos.
+- **Modern UI**: Frontend basado en Server Components para máximo rendimiento y SEO.
