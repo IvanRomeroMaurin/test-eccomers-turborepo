@@ -1,33 +1,64 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
+import { PrismaService } from '../../prisma/prisma.service'
+import { CreateReviewDto } from './dto/create-review.dto'
 
 @Injectable()
 export class ReviewsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.reviews.findMany();
+  // Obtener reseñas por producto (público)
+  findByProduct(productId: number) {
+    return this.prisma.reviews.findMany({
+      where: { product_id: productId },
+      include: {
+        users: {
+          select: { id: true, name: true }
+        }
+      },
+      orderBy: { created_at: 'desc' }
+    })
   }
 
-  async findOne(id: number) {
-    const record = await this.prisma.reviews.findUnique({ where: { id } as any });
-    if (!record) throw new NotFoundException(`Review #${id} not found`);
-    return record;
+  // Verificar si el usuario ya reseñó el producto
+  async findUserReview(productId: number, userId: string) {
+    return this.prisma.reviews.findUnique({
+      where: {
+        product_id_user_id: {
+          product_id: productId,
+          user_id: userId
+        }
+      }
+    })
   }
 
-  create(dto: CreateReviewDto) {
-    return this.prisma.reviews.create({ data: dto as any });
+  // Crear reseña (user_id viene del JWT)
+  async create(dto: CreateReviewDto, userId: string) {
+    const existing = await this.findUserReview(dto.product_id, userId)
+    if (existing) {
+      throw new ConflictException('Ya reseñaste este producto')
+    }
+    return this.prisma.reviews.create({
+      data: {
+        product_id: dto.product_id,
+        user_id: userId,
+        rating: dto.rating,
+        comment: dto.comment ?? null,
+      },
+      include: {
+        users: {
+          select: { id: true, name: true }
+        }
+      }
+    })
   }
 
-  async update(id: number, dto: UpdateReviewDto) {
-    await this.findOne(id);
-    return this.prisma.reviews.update({ where: { id } as any, data: dto as any });
-  }
-
-  async remove(id: number) {
-    await this.findOne(id);
-    return this.prisma.reviews.delete({ where: { id } as any });
+  // Eliminar reseña (solo el autor)
+  async remove(id: number, userId: string) {
+    const review = await this.prisma.reviews.findUnique({ where: { id } })
+    if (!review) throw new NotFoundException(`Review #${id} not found`)
+    if (review.user_id !== userId) {
+      throw new NotFoundException(`Review #${id} not found`)
+    }
+    return this.prisma.reviews.delete({ where: { id } })
   }
 }

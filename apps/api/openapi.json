@@ -1185,6 +1185,38 @@
       }
     },
     "/api/reviews": {
+      "get": {
+        "operationId": "ReviewsController_findByProduct",
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "query",
+            "description": "ID del producto",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "reviews"
+        ]
+      },
       "post": {
         "operationId": "ReviewsController_create",
         "parameters": [],
@@ -1200,7 +1232,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1208,86 +1247,12 @@
             "bearer": []
           }
         ],
-        "tags": [
-          "reviews"
-        ]
-      },
-      "get": {
-        "operationId": "ReviewsController_findAll",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
         "tags": [
           "reviews"
         ]
       }
     },
     "/api/reviews/{id}": {
-      "get": {
-        "operationId": "ReviewsController_findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": [
-          "reviews"
-        ]
-      },
-      "patch": {
-        "operationId": "ReviewsController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateReviewDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": [
-          "reviews"
-        ]
-      },
       "delete": {
         "operationId": "ReviewsController_remove",
         "parameters": [
@@ -2253,13 +2218,96 @@
         "type": "object",
         "properties": {}
       },
+      "ReviewUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "4539152d-031b-41c4-8ef8-c419e8b5f84a"
+          },
+          "name": {
+            "type": "string",
+            "example": "Juan Pérez",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "product_id": {
+            "type": "number",
+            "example": 1
+          },
+          "user_id": {
+            "type": "string",
+            "example": "4539152d-031b-41c4-8ef8-c419e8b5f84a"
+          },
+          "rating": {
+            "type": "number",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string",
+            "example": "Excelente producto",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2026-04-10T00:00:00.000Z",
+            "nullable": true
+          },
+          "users": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewUser"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "product_id",
+          "user_id",
+          "rating",
+          "comment",
+          "created_at",
+          "users"
+        ]
+      },
       "CreateReviewDto": {
         "type": "object",
-        "properties": {}
-      },
-      "UpdateReviewDto": {
-        "type": "object",
-        "properties": {}
+        "properties": {
+          "product_id": {
+            "type": "number",
+            "example": 1
+          },
+          "rating": {
+            "type": "number",
+            "example": 5,
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "object",
+            "example": "Excelente producto"
+          }
+        },
+        "required": [
+          "product_id",
+          "rating"
+        ]
       },
       "CreateAddressDto": {
         "type": "object",

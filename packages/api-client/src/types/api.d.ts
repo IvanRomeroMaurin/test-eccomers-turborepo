@@ -315,7 +315,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["ReviewsController_findAll"];
+        get: operations["ReviewsController_findByProduct"];
         put?: never;
         post: operations["ReviewsController_create"];
         delete?: never;
@@ -331,13 +331,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["ReviewsController_findOne"];
+        get?: never;
         put?: never;
         post?: never;
         delete: operations["ReviewsController_remove"];
         options?: never;
         head?: never;
-        patch: operations["ReviewsController_update"];
+        patch?: never;
         trace?: never;
     };
     "/api/addresses/me": {
@@ -618,8 +618,35 @@ export interface components {
         UpdateOrderShippingDto: Record<string, never>;
         CreatePaymentDto: Record<string, never>;
         UpdatePaymentDto: Record<string, never>;
-        CreateReviewDto: Record<string, never>;
-        UpdateReviewDto: Record<string, never>;
+        ReviewUser: {
+            /** @example 4539152d-031b-41c4-8ef8-c419e8b5f84a */
+            id: string;
+            /** @example Juan Pérez */
+            name: string | null;
+        };
+        Review: {
+            /** @example 1 */
+            id: number;
+            /** @example 1 */
+            product_id: number;
+            /** @example 4539152d-031b-41c4-8ef8-c419e8b5f84a */
+            user_id: string;
+            /** @example 5 */
+            rating: number;
+            /** @example Excelente producto */
+            comment: string | null;
+            /** @example 2026-04-10T00:00:00.000Z */
+            created_at: string | null;
+            users: components["schemas"]["ReviewUser"] | null;
+        };
+        CreateReviewDto: {
+            /** @example 1 */
+            product_id: number;
+            /** @example 5 */
+            rating: number;
+            /** @example Excelente producto */
+            comment?: Record<string, never>;
+        };
         CreateAddressDto: Record<string, never>;
         UpdateAddressDto: Record<string, never>;
         CreatePostalCodeDto: Record<string, never>;
@@ -1526,9 +1553,12 @@ export interface operations {
             };
         };
     };
-    ReviewsController_findAll: {
+    ReviewsController_findByProduct: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description ID del producto */
+                productId: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1539,7 +1569,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["Review"][];
+                };
             };
         };
     };
@@ -1560,26 +1592,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-        };
-    };
-    ReviewsController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "application/json": components["schemas"]["Review"];
                 };
-                content?: never;
             };
         };
     };
@@ -1593,29 +1608,6 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ReviewsController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateReviewDto"];
-            };
-        };
         responses: {
             200: {
                 headers: {

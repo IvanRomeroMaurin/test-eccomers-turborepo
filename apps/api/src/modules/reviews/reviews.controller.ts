@@ -1,45 +1,45 @@
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
-import { Controller, UseGuards, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ReviewsService } from './reviews.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards } from '@nestjs/common'
+import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger'
+import { ApiResponse } from '@nestjs/swagger'
+import { SupabaseAuthGuard } from '../auth/supabase-auth.guard'
+import { CurrentUser } from '../auth/decorators/current-user.decorator'
+import { ReviewsService } from './reviews.service'
+import { CreateReviewDto } from './dto/create-review.dto'
+import { Review } from './entities/review.entity'
 
 @ApiTags('reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly service: ReviewsService) {}
 
-  @UseGuards(SupabaseAuthGuard)
-  @ApiBearerAuth()
-  @Post()
-  create(@Body() dto: CreateReviewDto) {
-    return this.service.create(dto);
-  }
-
+  // PÚBLICO — reseñas de un producto
   @Get()
-  findAll() {
-    return this.service.findAll();
+  @ApiQuery({ name: 'productId', required: true, description: 'ID del producto' })
+  @ApiResponse({ status: 200, type: Review, isArray: true })
+  findByProduct(@Query('productId') productId: string) {
+    return this.service.findByProduct(Number(productId))
   }
 
+  // PROTEGIDO — crear reseña
+  @Post()
   @UseGuards(SupabaseAuthGuard)
   @ApiBearerAuth()
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(Number(id));
+  @ApiResponse({ status: 201, type: Review })
+  create(
+    @Body() dto: CreateReviewDto,
+    @CurrentUser() user: { id: string }
+  ) {
+    return this.service.create(dto, user.id)
   }
 
-  @UseGuards(SupabaseAuthGuard)
-  @ApiBearerAuth()
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateReviewDto) {
-    return this.service.update(Number(id), dto);
-  }
-
-  @UseGuards(SupabaseAuthGuard)
-  @ApiBearerAuth()
+  // PROTEGIDO — eliminar reseña propia
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(Number(id));
+  @UseGuards(SupabaseAuthGuard)
+  @ApiBearerAuth()
+  remove(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string }
+  ) {
+    return this.service.remove(Number(id), user.id)
   }
 }

@@ -1,8 +1,11 @@
-import { productsService } from '@repo/api-client'
+import { productsService, reviewsService } from '@repo/api-client'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { createClient } from '@/shared/lib/supabase/server'
+import { ReviewList } from '@/features/reviews/components/ReviewList'
+import { ReviewForm } from '@/features/reviews/components/ReviewForm'
 
 interface ProductPageProps {
   params: Promise<{ id: string }>
@@ -10,15 +13,22 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params
+  const supabase = await createClient()
 
-  let product
-  try {
-    product = await productsService.getById(Number(id))
-  } catch {
+  // Buscamos todo en paralelo
+  const [productRes, userRes, reviewsRes] = await Promise.allSettled([
+    productsService.getById(Number(id)),
+    supabase.auth.getUser(),
+    reviewsService.getByProduct(Number(id))
+  ])
+
+  if (productRes.status === 'rejected' || !productRes.value) {
     notFound()
   }
 
-  if (!product) notFound()
+  const product = productRes.value
+  const user = userRes.status === 'fulfilled' ? userRes.value.data.user : null
+  const reviews = reviewsRes.status === 'fulfilled' ? reviewsRes.value : []
 
   const stockDisponible = product.product_stocks?.filter(s => s.quantity > 0) ?? []
 
@@ -95,6 +105,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
             Próximamente — Agregar al carrito
           </Button>
         </div>
+      </div>
+
+      {/* Sección de reseñas */}
+      <div className="mt-16 max-w-2xl space-y-8">
+        <div className="space-y-1">
+          <p className="text-xs tracking-widest uppercase text-muted-foreground">
+            Opiniones
+          </p>
+          <h2 className="text-2xl font-light tracking-tight">
+            Reseñas del producto
+          </h2>
+        </div>
+
+        <ReviewList
+          reviews={reviews}
+          currentUserId={user?.id ?? null}
+          productId={Number(id)}
+        />
+
+        <ReviewForm
+          productId={Number(id)}
+          userId={user?.id ?? null}
+        />
       </div>
     </div>
   )
