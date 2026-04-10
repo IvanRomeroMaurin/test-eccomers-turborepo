@@ -39,41 +39,45 @@ export function RegisterForm() {
 
   if (success) {
     return (
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center">
+      <div className="w-full max-w-md p-10 space-y-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
         <div className="flex justify-center mb-4">
-          <svg className="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-          </svg>
+          <div className="p-4 bg-green-50 rounded-full">
+            <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900">Check your email</h2>
-        <p className="text-gray-600">
-          We&apos;ve sent an email to you with a link to confirm your account.
+        <h2 className="text-2xl font-bold text-gray-900">Verifica tu correo</h2>
+        <p className="text-gray-500 leading-relaxed">
+          Hemos enviado un enlace de confirmación a tu correo electrónico para activar tu cuenta.
         </p>
-        <Link href="/login" className="mt-6 inline-block text-blue-600 hover:text-blue-500 font-medium">
-          Return to login
-        </Link>
+        <div className="pt-4">
+          <Link href="/login" className="text-blue-600 hover:text-blue-700 font-bold">
+            Volver al inicio de sesión
+          </Link>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg border border-gray-100">
-      <div className="text-center">
-        <h2 className="text-3xl font-extrabold text-gray-900">Create account</h2>
-        <p className="mt-2 text-sm text-gray-600">Start your journey with us</p>
+    <div className="w-full max-w-md p-10 space-y-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-gray-900">
+      <div className="text-center space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Crear cuenta</h2>
+        <p className="text-gray-500">Únete a nuestra comunidad hoy mismo</p>
       </div>
 
       {error && (
-        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md">
+        <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg">
           {error}
         </div>
       )}
 
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="name">
-              Full Name
+            <label className="block text-sm font-semibold text-gray-700 pb-1.5" htmlFor="name">
+              Nombre completo
             </label>
             <Input
               id="name"
@@ -81,12 +85,13 @@ export function RegisterForm() {
               type="text"
               autoComplete="name"
               required
-              placeholder="John Doe"
+              placeholder="Juan Pérez"
+              className="bg-gray-50/50"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="phone">
-              Phone Number
+            <label className="block text-sm font-semibold text-gray-700 pb-1.5" htmlFor="phone">
+              Teléfono
             </label>
             <Input
               id="phone"
@@ -94,12 +99,13 @@ export function RegisterForm() {
               type="tel"
               autoComplete="tel"
               required
-              placeholder="+1234567890"
+              placeholder="+54 9 11 1234 5678"
+              className="bg-gray-50/50"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="email">
-              Email address
+            <label className="block text-sm font-semibold text-gray-700 pb-1.5" htmlFor="email">
+              Correo electrónico
             </label>
             <Input
               id="email"
@@ -107,12 +113,13 @@ export function RegisterForm() {
               type="email"
               autoComplete="email"
               required
-              placeholder="you@example.com"
+              placeholder="nombre@ejemplo.com"
+              className="bg-gray-50/50"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="password">
-              Password
+            <label className="block text-sm font-semibold text-gray-700 pb-1.5" htmlFor="password">
+              Contraseña
             </label>
             <Input
               id="password"
@@ -121,23 +128,24 @@ export function RegisterForm() {
               autoComplete="new-password"
               required
               placeholder="••••••••"
+              className="bg-gray-50/50"
             />
           </div>
         </div>
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full py-6 text-base font-semibold transition-all hover:scale-[1.01]"
           disabled={loading}
         >
-          {loading ? 'Creating account...' : 'Create account'}
+          {loading ? 'Creando cuenta...' : 'Crear cuenta'}
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-          Sign in
+      <p className="text-center text-sm text-gray-600">
+        ¿Ya tienes una cuenta?{' '}
+        <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          Inicia sesión
         </Link>
       </p>
     </div>

@@ -1,5 +1,6 @@
 import { createClient } from '@/shared/lib/supabase/server'
 import { logout } from '@/features/auth/actions/logout'
+import Link from 'next/link'
 
 export const metadata = {
   title: 'Dashboard | Our App',
@@ -15,7 +16,12 @@ export default async function DashboardPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
         
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Welcome back!</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Welcome back!</h2>
+            <Link href="/profile" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                Mi Perfil
+            </Link>
+          </div>
           <div className="space-y-3">
             <p className="text-sm text-gray-600">
               <span className="font-medium text-gray-900">Email:</span> {user?.email}

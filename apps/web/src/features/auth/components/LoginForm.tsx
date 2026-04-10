@@ -32,23 +32,23 @@ export function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg border border-gray-100">
-      <div className="text-center">
-        <h2 className="text-3xl font-extrabold text-gray-900">Welcome back</h2>
-        <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
+    <div className="w-full max-w-md p-10 space-y-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-gray-900">
+      <div className="text-center space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Bienvenido</h2>
+        <p className="text-gray-500">Ingresa tus credenciales para continuar</p>
       </div>
 
       {error && (
-        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md">
+        <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg">
           {error}
         </div>
       )}
 
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        <div className="space-y-4">
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="email">
-              Email address
+            <label className="block text-sm font-semibold text-gray-700 pb-1.5" htmlFor="email">
+              Correo electrónico
             </label>
             <Input
               id="email"
@@ -56,13 +56,16 @@ export function LoginForm() {
               type="email"
               autoComplete="email"
               required
-              placeholder="you@example.com"
+              placeholder="nombre@ejemplo.com"
+              className="bg-gray-50/50"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 pb-1" htmlFor="password">
-              Password
-            </label>
+            <div className="flex justify-between items-center pb-1.5">
+              <label className="text-sm font-semibold text-gray-700" htmlFor="password">
+                Contraseña
+              </label>
+            </div>
             <Input
               id="password"
               name="password"
@@ -70,23 +73,24 @@ export function LoginForm() {
               autoComplete="current-password"
               required
               placeholder="••••••••"
+              className="bg-gray-50/50"
             />
           </div>
         </div>
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full py-6 text-base font-semibold transition-all hover:scale-[1.01]"
           disabled={loading}
         >
-          {loading ? 'Signing in...' : 'Sign in'}
+          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-gray-600">
-        Don&apos;t have an account?{' '}
-        <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
-          Sign up
+      <p className="text-center text-sm text-gray-600">
+        ¿No tienes una cuenta?{' '}
+        <Link href="/register" className="font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          Regístrate gratis
         </Link>
       </p>
     </div>
