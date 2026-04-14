@@ -9,8 +9,8 @@ Este es un proyecto personal dedicado a la práctica y dominio de arquitecturas 
 El proyecto destaca por el uso de patrones de diseño avanzados:
 
 - **Feature-Sliced Design (FSD)**: En `apps/web` se implementa esta arquitectura para garantizar la modularidad, mantenibilidad y escalabilidad del frontend.
-- **Clean Architecture Principles**: El backend (`apps/api`) sigue principios de modularidad y separación de capas para facilitar la evolución del sistema.
-- **Shared Package Pattern**: Tipado unificado mediante un paquete de tipos compartido (`@repo/types`).
+- **Clean Architecture (Golden Standard)**: El backend (`apps/api`) sigue una arquitectura de 4 capas (Domain, Application, Infrastructure, Presentation) con inyección de dependencias total y mappers desacoplados.
+- **Type-Safe Everywhere (Zod)**: Uso de **Zod** como fuente única de verdad para esquemas y tipado compartido en todo el monorepo.
 
 ---
 
@@ -26,6 +26,8 @@ El proyecto destaca por el uso de patrones de diseño avanzados:
 | [Prisma ORM](https://www.prisma.io/) | **Base de Datos** — Gestión de esquemas (`auth` y `public`) y consultas |
 | [Turborepo](https://turbo.build/) | **Orquestador** — Gestión inteligente de tareas y cache |
 | [pnpm](https://pnpm.io/) | **Package Manager** — Gestión eficiente de dependencias con workspaces |
+| [Zod](https://zod.dev/) | **Validation** — Fuente única de verdad para esquemas y tipado compartido |
+| [nestjs-zod](https://github.com/risu74/nestjs-zod) | **Integration** — Validación automática y Swagger a partir de Zod |
 | [openapi-typescript](https://openapi-ts.pages.dev/) | **Type Safety** — Generación de tipos TS a partir de OpenAPI |
 
 
@@ -90,6 +92,6 @@ pnpm dev
 Este proyecto se utiliza como laboratorio para implementar:
 - **Auth Flow**: Registro con confirmación de email y redirección segura.
 - **Database Synchronization**: Sincronización automática de perfiles mediante triggers de PostgreSQL.
-- **Type Safe Communication**: Uso de `openapi-typescript` para garantizar que el frontend y el backend hablen el mismo idioma sin escribir tipos manuales.
-- **Protected Routes**: Implementación de Guards JWT en NestJS para asegurar que solo usuarios autenticados operen sobre sus datos.
+- **Type-Safe Everywhere**: Migración progresiva de interfaces manuales a esquemas de **Zod** para validación en tiempo de ejecución coordinada entre API y Frontend.
 - **Modern UI**: Frontend basado en Server Components para máximo rendimiento y SEO.
+- **ESM Standard**: Implementación adaptada a los estándares modernos de Node.js (v24+) y resolución de módulos estricta.

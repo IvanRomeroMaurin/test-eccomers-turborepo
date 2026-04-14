@@ -1,5 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCategoryDto } from './create-category.dto';
-import { UpdateCategoryCommand } from '../../application/interfaces/category-commands.interface';
+import { createZodDto } from 'nestjs-zod';
+import { CategorySchema } from '@repo/types';
 
-export class UpdateCategoryDto extends PartialType(CreateCategoryDto) implements UpdateCategoryCommand {}
+export class UpdateCategoryDto extends createZodDto(
+  CategorySchema.omit({ id: true, created_at: true }).partial()
+) {}

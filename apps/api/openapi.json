@@ -3013,7 +3013,7 @@
             "maximum": 5
           },
           "comment": {
-            "type": "object",
+            "type": "string",
             "example": "Excelente producto"
           }
         },
@@ -3071,19 +3071,30 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Electronics"
+            "minLength": 1,
+            "x-nestjs_zod-has-null": true
           },
           "slug": {
             "type": "string",
-            "example": "electronics"
+            "minLength": 1,
+            "x-nestjs_zod-has-null": true
           },
           "description": {
-            "type": "string",
-            "example": "Electronic gadgets and devices"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "x-nestjs_zod-has-null": true,
+            "x-nestjs_zod-empty-type": true
           },
           "is_active": {
+            "default": true,
             "type": "boolean",
-            "example": true
+            "x-nestjs_zod-has-null": true
           }
         },
         "required": [
@@ -3096,19 +3107,30 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Electronics"
+            "minLength": 1,
+            "x-nestjs_zod-has-null": true
           },
           "slug": {
             "type": "string",
-            "example": "electronics"
+            "minLength": 1,
+            "x-nestjs_zod-has-null": true
           },
           "description": {
-            "type": "string",
-            "example": "Electronic gadgets and devices"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "x-nestjs_zod-has-null": true,
+            "x-nestjs_zod-empty-type": true
           },
           "is_active": {
+            "default": true,
             "type": "boolean",
-            "example": true
+            "x-nestjs_zod-has-null": true
           }
         }
       },

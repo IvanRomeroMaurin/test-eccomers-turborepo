@@ -20,7 +20,7 @@ export async function createReviewAction(
     await reviewsService.create(session.access_token, {
       product_id: productId,
       rating,
-      comment: comment || null,
+      comment: (comment || '') as any,
     })
     revalidatePath(`/products/${productId}`)
     return { success: true }

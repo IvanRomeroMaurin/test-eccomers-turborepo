@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
+import { ZodValidationPipe } from 'nestjs-zod';
 import { writeFileSync } from 'fs';
 
 async function bootstrap() {
@@ -10,10 +11,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ZodValidationPipe(),
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
   
   app.useGlobalFilters(new DomainExceptionFilter());
 

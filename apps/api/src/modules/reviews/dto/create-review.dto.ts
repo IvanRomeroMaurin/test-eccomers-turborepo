@@ -14,7 +14,7 @@ export class CreateReviewDto {
   @Max(5)
   rating: number
 
-  @ApiPropertyOptional({ example: 'Excelente producto' })
+  @ApiPropertyOptional({ example: 'Excelente producto', type: String })
   @IsOptional()
   @IsString()
   comment?: string | null

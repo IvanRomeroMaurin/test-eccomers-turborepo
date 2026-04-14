@@ -53,7 +53,7 @@ export function ReviewList({ reviews, currentUserId, productId }: ReviewListProp
                     : ''}
                 </p>
                 {currentUserId === review.user_id && (
-                  <form action={deleteReviewAction.bind(null, review.id, productId)}>
+                  <form action={deleteReviewAction.bind(null, review.id, productId) as any}>
                     <button
                       type="submit"
                       className="text-xs text-muted-foreground hover:text-destructive transition-colors"

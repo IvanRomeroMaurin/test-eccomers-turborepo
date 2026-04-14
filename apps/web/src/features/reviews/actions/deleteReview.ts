@@ -4,7 +4,7 @@ import { createClient } from '@/shared/lib/supabase/server'
 import { reviewsService } from '@repo/api-client'
 import { revalidatePath } from 'next/cache'
 
-export async function deleteReviewAction(reviewId: number, productId: number) {
+export async function deleteReviewAction(reviewId: number, productId: number, _: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autenticado' }
