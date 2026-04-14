@@ -9,7 +9,8 @@ Este es un proyecto personal dedicado a la práctica y dominio de arquitecturas 
 El proyecto destaca por el uso de patrones de diseño avanzados:
 
 - **Feature-Sliced Design (FSD)**: En `apps/web` se implementa esta arquitectura para garantizar la modularidad, mantenibilidad y escalabilidad del frontend.
-- **Clean Architecture (Golden Standard)**: El backend (`apps/api`) sigue una arquitectura de 4 capas (Domain, Application, Infrastructure, Presentation) con inyección de dependencias total y mappers desacoplados.
+- **Clean Architecture (Golden Standard)**: El backend (`apps/api`) sigue una arquitectura de 4 capas con inyección de dependencias total y mappers desacoplados.
+- **Fastify Backend Engine**: Migración de Express a **Fastify** para lograr una arquitectura de alto rendimiento, baja latencia y validación de esquemas optimizada.
 - **Type-Safe Everywhere (Zod)**: Uso de **Zod** como fuente única de verdad para esquemas y tipado compartido en todo el monorepo.
 
 ---
@@ -19,7 +20,7 @@ El proyecto destaca por el uso de patrones de diseño avanzados:
 | Herramienta | Rol |
 |---|---|
 | [Next.js 15+](https://nextjs.org/) | **Frontend** — React con App Router y Server Components |
-| [NestJS 11](https://nestjs.com/) | **Backend** — API REST modular y escalable |
+| [NestJS 11 + Fastify](https://nestjs.com/) | **Backend** — API REST de alto rendimiento con motor Fastify |
 | [Supabase Auth](https://supabase.com/auth) | **Autenticación** — Gestión de sesiones, login y registro |
 | [Passport & JWT](http://www.passportjs.org/) | **Seguridad** — Validación de JWT de Supabase en el backend |
 | [Swagger / OpenAPI](https://swagger.io/) | **Documentación** — Especificación y UI interactiva de la API |
@@ -93,5 +94,6 @@ Este proyecto se utiliza como laboratorio para implementar:
 - **Auth Flow**: Registro con confirmación de email y redirección segura.
 - **Database Synchronization**: Sincronización automática de perfiles mediante triggers de PostgreSQL.
 - **Type-Safe Everywhere**: Migración progresiva de interfaces manuales a esquemas de **Zod** para validación en tiempo de ejecución coordinada entre API y Frontend.
+- **High-Performance Engine**: Sustitución de Express por **Fastify** en el backend para maximizar el throughput y reducir la latencia del sistema.
 - **Modern UI**: Frontend basado en Server Components para máximo rendimiento y SEO.
 - **ESM Standard**: Implementación adaptada a los estándares modernos de Node.js (v24+) y resolución de módulos estricta.

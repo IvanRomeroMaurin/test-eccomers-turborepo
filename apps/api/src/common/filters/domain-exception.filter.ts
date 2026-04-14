@@ -1,5 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
-import { Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { 
   CategoryNotFoundError, 
   CategoryAlreadyExistsError,
@@ -10,8 +10,8 @@ import {
 export class DomainExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const response = ctx.getResponse<FastifyReply>();
+    const request = ctx.getRequest<FastifyRequest>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = exception.message;
@@ -27,14 +27,13 @@ export class DomainExceptionFilter implements ExceptionFilter {
     }
 
     // Si no es un error de dominio conocido, dejamos que Nest o el programador manejen el 500
-    // Opcional: si es una HttpException normal de Nest, la dejamos pasar.
     if ((exception as any).getStatus) {
       return response
-        .status((exception as any).getStatus())
-        .json((exception as any).getResponse());
+        .code((exception as any).getStatus())
+        .send((exception as any).getResponse());
     }
 
-    response.status(status).json({
+    response.code(status).send({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
