@@ -1,6 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User as UserInterface } from '@repo/types';
 
+export class RoleEntity {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'admin' })
+  name: string;
+}
+
+export class UserRoleEntity {
+  @ApiProperty({ type: () => RoleEntity })
+  roles: RoleEntity;
+}
+
 export class User implements UserInterface {
   @ApiProperty({ example: 'cbbc6dcc-79e7-409f-9a66-2ee871e52e3f' })
   id: string;
@@ -16,4 +29,7 @@ export class User implements UserInterface {
 
   @ApiProperty({ example: '2026-04-10T05:27:56.077Z', required: false, nullable: true, type: () => String })
   createdAt: Date | null;
+
+  @ApiProperty({ type: () => [UserRoleEntity], required: false })
+  user_roles?: UserRoleEntity[];
 }

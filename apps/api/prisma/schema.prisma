@@ -647,15 +647,16 @@ model reviews {
 }
 
 model users {
-  email      String      @unique
+  email      String       @unique
   name       String?
   phone      String?
-  created_at DateTime?   @default(now()) @db.Timestamptz(6)
-  id         String      @id @db.Uuid
+  created_at DateTime?    @default(now()) @db.Timestamptz(6)
+  id         String       @id @db.Uuid
   addresses  addresses[]
   orders     orders[]
   reviews    reviews[]
-  users      auth_users  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_roles user_roles[]
+  users      auth_users   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("users")
   @@schema("public")
@@ -717,6 +718,25 @@ model variant_attributes {
   product_variants   product_variants @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "variant_attributes_variant_fkey")
 
   @@id([variant_id, attribute_value_id])
+  @@schema("public")
+}
+
+model roles {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  user_roles user_roles[]
+
+  @@schema("public")
+}
+
+model user_roles {
+  user_id     String    @db.Uuid
+  role_id     Int
+  assigned_at DateTime? @default(now()) @db.Timestamptz(6)
+  roles       roles     @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_roles_role_fkey")
+  users       users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_roles_user_fkey")
+
+  @@id([user_id, role_id])
   @@schema("public")
 }
 
